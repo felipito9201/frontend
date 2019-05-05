@@ -9,7 +9,7 @@ import {ConsultoresResult, GraficoData, InformeResult, PizzaData} from '../model
 })
 export class ConsultorService {
 
-  API_URL = 'http://localhost:3000/api/';
+  API_URL = 'https://agencetest2019.herokuapp.com/api/';
 
   constructor(private http: HttpClient) {
   }
