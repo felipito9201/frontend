@@ -1,0 +1,229 @@
+<mat-card>
+  <mat-card-header>
+    <mat-card-title>Comercial</mat-card-title>
+  </mat-card-header>
+
+  <mat-card-content fxLayout="column">
+    <div fxLayout="row" fxLayout.lt-md="column">
+      <div fxLayout="column" fxFlex="40">
+        <h5 fxLayoutAlign="center">Listado</h5>
+
+        <mat-form-field>
+          <input matInput (keyup)="filterList($event.target.value)" placeholder="Filtrar">
+        </mat-form-field>
+
+
+        <table mat-table #MatSortList="matSort" [dataSource]="dataSourceList" matSort>
+          <ng-container matColumnDef="select" stickyStart>
+            <th mat-header-cell *matHeaderCellDef>
+              <mat-checkbox (change)="$event ? masterToggleList() : null"
+                            [checked]="selectionList.hasValue() && isAllSelectedList()"
+                            [indeterminate]="selectionList.hasValue() && !isAllSelectedList()"
+                            *ngIf="dataSourceList ? dataSourceList.data.length > 0 : false">
+              </mat-checkbox>
+            </th>
+            <td mat-cell *matCellDef="let row">
+              <mat-checkbox (click)="$event.stopPropagation()"
+                            (change)="$event ? selectionList.toggle(row) : null"
+                            [checked]="selectionList.isSelected(row)">
+              </mat-checkbox>
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="nombre">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Nombre</th>
+            <td mat-cell *matCellDef="let element"> {{element.nombre}} </td>
+          </ng-container>
+
+          <tr mat-header-row *matHeaderRowDef="displayedColumns, sticky: true"></tr>
+          <tr mat-row *matRowDef="let row; columns: displayedColumns;" (click)="selectionList.toggle(row)"></tr>
+        </table>
+
+        <mat-paginator #MatPaginatorList [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
+      </div>
+
+      <div fxLayout="column" fxFlex="20" fxLayoutAlign="center center">
+        <button mat-raised-button (click)="add()" color="primary">
+          Agregar a Selecci&oacute;n
+        </button>
+        <br>
+        <button mat-raised-button (click)="del()" color="warn">
+          Quitar de Selecci&oacute;n
+        </button>
+
+      </div>
+
+      <div fxLayout="column" fxFlex="40">
+        <h5 fxLayoutAlign="center">Selecci&oacute;n</h5>
+
+        <mat-form-field>
+          <input matInput (keyup)="filterSelected($event.target.value)" placeholder="Filtrar">
+        </mat-form-field>
+
+
+        <table mat-table #MatSortSelected="matSort" [dataSource]="dataSourceSelected" matSort>
+          <ng-container matColumnDef="select" stickyStart>
+            <th mat-header-cell *matHeaderCellDef>
+              <mat-checkbox (change)="$event ? masterToggleSelected() : null"
+                            [checked]="selectionSelected.hasValue() && isAllSelectedSelected()"
+                            [indeterminate]="selectionSelected.hasValue() && !isAllSelectedSelected()"
+                            *ngIf="dataSourceSelected ? dataSourceSelected.data.length > 0 : false">
+              </mat-checkbox>
+            </th>
+            <td mat-cell *matCellDef="let row">
+              <mat-checkbox (click)="$event.stopPropagation()"
+                            (change)="$event ? selectionSelected.toggle(row) : null"
+                            [checked]="selectionSelected.isSelected(row)">
+              </mat-checkbox>
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="nombre">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Nombre</th>
+            <td mat-cell *matCellDef="let element"> {{element.nombre}} </td>
+          </ng-container>
+
+          <tr mat-header-row *matHeaderRowDef="displayedColumns, sticky: true"></tr>
+          <tr mat-row *matRowDef="let row; columns: displayedColumns;" (click)="selectionSelected.toggle(row)"></tr>
+        </table>
+
+        <mat-paginator #MatPaginatorSelected [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
+      </div>
+    </div>
+
+    <br>
+
+    <form [formGroup]="form" fxLayout="column">
+
+      <div fxLayout="row" fxLayout.xs="column" fxLayoutAlign="space-between">
+        <mat-form-field fxFlex="24">
+          <mat-select placeholder="Mes Inicio" formControlName="mes_inicio" [errorStateMatcher]="mesErrorStateMatcher"
+                      required>
+            <mat-option *ngFor="let item of meses" [value]="item.value">
+              {{item.desc}}
+            </mat-option>
+          </mat-select>
+          <mat-error *ngIf="form.get('mes_inicio').hasError('required')">
+            Campo requerido.
+          </mat-error>
+          <mat-error *ngIf="form.hasError('mesError')">
+            El mes de inicio debe ser menor o igual que el de fin.
+          </mat-error>
+        </mat-form-field>
+
+        <mat-form-field fxFlex="24">
+          <mat-select placeholder="A&ntilde;o Inicio" formControlName="anno_inicio"
+                      [errorStateMatcher]="annoErrorStateMatcher" required>
+            <mat-option *ngFor="let item of annos" [value]="item">
+              {{item}}
+            </mat-option>
+          </mat-select>
+          <mat-error *ngIf="form.get('anno_inicio').hasError('required')">
+            Campo requerido.
+          </mat-error>
+          <mat-error *ngIf="form.hasError('annoError')">
+            El a&ntilde;o de inicio debe ser menor o igual que el de fin.
+          </mat-error>
+        </mat-form-field>
+
+        <mat-form-field fxFlex="24">
+          <mat-select placeholder="Mes Fin" formControlName="mes_fin" [errorStateMatcher]="mesErrorStateMatcher"
+                      required>
+            <mat-option *ngFor="let item of meses" [value]="item.value">
+              {{item.desc}}
+            </mat-option>
+          </mat-select>
+          <mat-error *ngIf="form.get('mes_fin').hasError('required')">
+            Campo requerido.
+          </mat-error>
+          <mat-error *ngIf="form.hasError('mesError')">
+            El mes de inicio debe ser menor o igual que el de fin.
+          </mat-error>
+        </mat-form-field>
+
+        <mat-form-field fxFlex="24">
+          <mat-select placeholder="A&ntilde;o Fin" formControlName="anno_fin"
+                      [errorStateMatcher]="annoErrorStateMatcher" required>
+            <mat-option *ngFor="let item of annos" [value]="item">
+              {{item}}
+            </mat-option>
+          </mat-select>
+          <mat-error *ngIf="form.get('anno_fin').hasError('required')">
+            Campo requerido.
+          </mat-error>
+          <mat-error *ngIf="form.hasError('annoError')">
+            El a&ntilde;o de inicio debe ser menor o igual que el de fin.
+          </mat-error>
+        </mat-form-field>
+      </div>
+
+      <div fxLayout="row" fxLayout.xs="column" fxLayoutAlign="center" fxLayoutGap="10px">
+        <button mat-raised-button (click)="showInforme()" color="default">Informe</button>
+
+        <button mat-raised-button (click)="showGrafico()" color="default">Gr&aacute;fico</button>
+
+        <button mat-raised-button (click)="showPizza()" color="default">Pizza</button>
+      </div>
+    </form>
+
+    <br>
+
+    <div *ngIf="!informeHidden">
+      <div *ngFor="let informe of informes">
+        <br>
+        <div fxLayout="column" class="mat-elevation-z8">
+          <h6 fxLayoutAlign="center">{{informe.nombre}}</h6>
+
+          <span *ngIf="!informe.dataSource.data.length > 0" style="margin: 10px">No se encontraron datos.</span>
+
+          <table mat-table [dataSource]="informe.dataSource" *ngIf="informe.dataSource.data.length > 0">
+            <ng-container matColumnDef="fecha">
+              <th mat-header-cell *matHeaderCellDef> Fecha</th>
+              <td mat-cell *matCellDef="let element"> {{formatDate(element.fecha)}} </td>
+              <td mat-footer-cell *matFooterCellDef> Saldo</td>
+            </ng-container>
+
+            <ng-container matColumnDef="ganacia">
+              <th mat-header-cell *matHeaderCellDef> Ganancia</th>
+              <td mat-cell *matCellDef="let element"> {{element.ganacia.toFixed(2)  | currency}} </td>
+              <td mat-footer-cell *matFooterCellDef> {{totalGanancia(informe.dataSource.data) | currency}} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="comision">
+              <th mat-header-cell *matHeaderCellDef> Comosi&oacute;n</th>
+              <td mat-cell *matCellDef="let element"> {{element.comision.toFixed(2)  | currency}} </td>
+              <td mat-footer-cell *matFooterCellDef> {{totalComision(informe.dataSource.data) | currency}} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="costo">
+              <th mat-header-cell *matHeaderCellDef> Costo</th>
+              <td mat-cell *matCellDef="let element"> {{element.costo.toFixed(2)  | currency}} </td>
+              <td mat-footer-cell *matFooterCellDef> {{totalCosto(informe.dataSource.data) | currency}} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="lucro">
+              <th mat-header-cell *matHeaderCellDef> Lucro</th>
+              <td mat-cell *matCellDef="let element">
+                {{(element.ganacia - element.comision - element.costo).toFixed(2) | currency}}
+              </td>
+              <td mat-footer-cell *matFooterCellDef> {{totalLucro(informe.dataSource.data) | currency}} </td>
+            </ng-container>
+
+            <tr mat-header-row *matHeaderRowDef="displayedColumnsInforme, sticky: true"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumnsInforme;"></tr>
+            <tr mat-footer-row *matFooterRowDef="displayedColumnsInforme"></tr>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <div [hidden]="graficoHidden">
+      <canvas id="grafico">{{ grafico }}</canvas>
+    </div>
+
+    <div [hidden]="pizzaHidden">
+      <canvas id="pizza">{{ pizza }}</canvas>
+    </div>
+
+  </mat-card-content>
+</mat-card>
