@@ -8,27 +8,40 @@ import {AppComponent} from './app.component';
 
 import {FlexLayoutModule} from '@angular/flex-layout';
 import {FullComponent} from './layouts/full/full.component';
-import {AppHeaderComponent} from './layouts/full/header/header.component';
 import {AppSidebarComponent} from './layouts/full/sidebar/sidebar.component';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
-import {DemoMaterialModule} from './demo-material-module';
+import {MaterialModule} from './material/material-module';
 
 import {SharedModule} from './shared/shared.module';
 import {SpinnerComponent} from './shared/spinner.component';
+import {ComercialComponent} from './components/comercial/comercial.component';
+import {FormsModule, ReactiveFormsModule} from '@angular/forms';
+import {AdministracionComponent} from './components/administracion/administracion.component';
+import {AgenciaComponent} from './components/agencia/agencia.component';
+import {FinancieroComponent} from './components/financiero/financiero.component';
+import {ProyectosComponent} from './components/proyectos/proyectos.component';
+import {UsuarioComponent} from './components/usuario/usuario.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     FullComponent,
-    AppHeaderComponent,
     SpinnerComponent,
-    AppSidebarComponent
+    AppSidebarComponent,
+    ComercialComponent,
+    AdministracionComponent,
+    AgenciaComponent,
+    FinancieroComponent,
+    ProyectosComponent,
+    UsuarioComponent
   ],
   imports: [
     BrowserModule,
     BrowserAnimationsModule,
-    DemoMaterialModule,
+    MaterialModule,
     FlexLayoutModule,
+    FormsModule,
+    ReactiveFormsModule,
     HttpClientModule,
     SharedModule,
     RouterModule.forRoot(AppRoutes)
