@@ -16,18 +16,20 @@ import {AnnoErrorStateMatcher, annoValidator, MesErrorStateMatcher, mesValidator
 })
 export class ComercialComponent implements OnInit {
 
+  // columnas de tablas Listado y Seleccion
   displayedColumns: string[] = ['select', 'nombre'];
 
+  // datasources, paginators y sorts de Listado y Seleccion
   dataSourceList: MatTableDataSource<ConsultoresResult>;
-  selectionList: SelectionModel<ConsultoresResult> = new SelectionModel<ConsultoresResult>(true, null);
-  @ViewChild('MatPaginatorList') paginatorList: MatPaginator;
-  @ViewChild('MatSortList') sortList: MatSort;
-
   dataSourceSelected: MatTableDataSource<ConsultoresResult>;
   selectionSelected: SelectionModel<ConsultoresResult> = new SelectionModel<ConsultoresResult>(true, null);
+  selectionList: SelectionModel<ConsultoresResult> = new SelectionModel<ConsultoresResult>(true, null);
+  @ViewChild('MatPaginatorList') paginatorList: MatPaginator;
   @ViewChild('MatPaginatorSelected') paginatorSelected: MatPaginator;
+  @ViewChild('MatSortList') sortList: MatSort;
   @ViewChild('MatSortSelected') sortSelected: MatSort;
 
+  // arreglos de listado y seleccion
   list: ConsultoresResult[];
   selected: ConsultoresResult[] = [];
 
@@ -50,9 +52,11 @@ export class ComercialComponent implements OnInit {
 
   annos = ['2005', '2006', '2007', '2008', '2009', '2010'];
 
+  // error matches de mes y anno
   mesErrorStateMatcher = new MesErrorStateMatcher();
   annoErrorStateMatcher = new AnnoErrorStateMatcher();
 
+  // tabla de Informe
   displayedColumnsInforme: string[] = ['fecha', 'ganacia', 'comision', 'costo', 'lucro'];
   informes: InformeTabla[] = [];
 
@@ -60,6 +64,7 @@ export class ComercialComponent implements OnInit {
   graficoHidden = true;
   pizzaHidden = true;
 
+  // charts
   grafico: any;
   pizza: any;
 
@@ -83,6 +88,7 @@ export class ComercialComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    // se obtienen los consultores
     this.consultorService.selectConsultores().subscribe(resp => {
       this.list = resp;
       this.dataSourceList = new MatTableDataSource<ConsultoresResult>(this.list);
@@ -123,6 +129,7 @@ export class ComercialComponent implements OnInit {
       this.dataSourceSelected.data.forEach(row => this.selectionSelected.select(row));
   }
 
+  // quita consultores de la tabla de Listado y la agrega a Seleccion
   add() {
     if (!this.selectionList.isEmpty()) {
       this.selected.push(...this.selectionList.selected);
@@ -144,6 +151,7 @@ export class ComercialComponent implements OnInit {
     }
   }
 
+  // quita consultores de la tabla de Seleccion y la agrega a Listado
   del() {
     if (!this.selectionSelected.isEmpty()) {
       this.list.push(...this.selectionSelected.selected);
@@ -165,88 +173,114 @@ export class ComercialComponent implements OnInit {
     }
   }
 
+  // devuelve la fecha en formato Enero 2000
   formatDate(date: string) {
     const [year, month] = date.split('-');
-
     return this.meses.find(item => item.value === month).desc + ' ' + year;
   }
 
+  // muestra los informes
   showInforme() {
+    // se comprueba si el formulario es valido
     if (this.form.valid) {
+      // se comprueba si hay elementos en la tabla Seleccion
       if (this.dataSourceSelected && this.dataSourceSelected.data.length > 0) {
 
+        // se obtienen las fechas
         const inicio = this.form.get('anno_inicio').value + '-' + this.form.get('mes_inicio').value;
         const fin = this.form.get('anno_fin').value + '-' + this.form.get('mes_fin').value;
 
+        // se crea un arreglo con los usuarios seleccionados
         const usuarios = [];
         this.dataSourceSelected.data.forEach(item => {
           usuarios.push(item.usuario);
         });
 
+        // se hace la llamada a al servicio
         this.consultorService.selectInforme(usuarios, inicio, fin).subscribe(resp => {
+          // se comprueba si se recibio una respuesta
           if (resp) {
+            // se muestra la seccion de informe
             this.informeHidden = false;
             this.graficoHidden = true;
             this.pizzaHidden = true;
 
+            // se crean los datasources de los informes
             resp.forEach(item => {
               this.informes.push({nombre: item.nombre, dataSource: new MatTableDataSource<Informe>(item.informes)});
             });
+          } else {
+            // se muestra mensaje de error
+            this.snackBar.open('Ha ocurrido un error', null, {duration: 1500});
           }
         });
 
       } else {
+        // se muestra mensaje al usuario
         this.snackBar.open('No hay usuarios en la tabla Seleccion', null, {duration: 1500});
       }
     }
   }
 
+  // calcula el total de ganancias
   totalGanancia(array: Informe[]) {
     return array.map(t => t.ganacia).reduce((acc, value) => acc + value, 0);
   }
 
+  // calcula el total de comision
   totalComision(array: Informe[]) {
     return array.map(t => t.comision).reduce((acc, value) => acc + value, 0);
   }
 
+  // calcula el total de costo
   totalCosto(array: Informe[]) {
     return array.map(t => t.costo).reduce((acc, value) => acc + value, 0);
   }
 
+  // calcula el total de lucro
   totalLucro(array: Informe[]) {
     return array.map(t => t.ganacia).reduce((acc, value) => acc + value, 0) -
       array.map(t => t.comision).reduce((acc, value) => acc + value, 0) -
       array.map(t => t.costo).reduce((acc, value) => acc + value, 0);
   }
 
+  // muestra el grafico
   showGrafico() {
+    // se comprueba si el formulario es valido
     if (this.form.valid) {
+      // se comprueba si hay elementos en la tabla Seleccion
       if (this.dataSourceSelected && this.dataSourceSelected.data.length > 0) {
+
+        // se obtienen las fechas
         const inicio = this.form.get('anno_inicio').value + '-' + this.form.get('mes_inicio').value;
         const fin = this.form.get('anno_fin').value + '-' + this.form.get('mes_fin').value;
 
+        // se crea un arreglo con los usuarios seleccionados
         const usuarios = [];
         this.dataSourceSelected.data.forEach(item => {
           usuarios.push(item.usuario);
         });
 
+        // se hace la llamda a al servicio
         this.consultorService.selectGraficoData(usuarios, inicio, fin).subscribe(resp => {
+          // se comprueba si se recibio una respuesta
           if (resp) {
+            // se muestra la seccion de grafico
             this.informeHidden = true;
             this.graficoHidden = false;
             this.pizzaHidden = true;
 
-
+            // se obtienen los datos del grafico
             const labels = [];
             const promedioData = [];
             const gananciaData = [];
-
             resp.ganancias.forEach(item => {
               labels.push(item.nombre);
               promedioData.push(resp.promedio);
               gananciaData.push(Number(item.ganancia).toFixed(2));
             });
 
+            // se crea el grafico
             this.grafico = new Chart('grafico', {
               type: 'bar',
               data: {
@@ -294,34 +328,48 @@ export class ComercialComponent implements OnInit {
                 }
               }
             });
+          } else {
+            // se muestra mensaje de error
+            this.snackBar.open('Ha ocurrido un error', null, {duration: 1500});
           }
         });
+      } else {
+        // se muestra mensaje al usuario
+        this.snackBar.open('No hay usuarios en la tabla Seleccion', null, {duration: 1500});
       }
     }
   }
 
+  // muestra la pizza
   showPizza() {
+    // se comprueba si el formulario es valido
     if (this.form.valid) {
+      // se comprueba si hay elementos en la tabla Seleccion
       if (this.dataSourceSelected && this.dataSourceSelected.data.length > 0) {
 
+        // se obtienen las fechas
         const inicio = this.form.get('anno_inicio').value + '-' + this.form.get('mes_inicio').value;
         const fin = this.form.get('anno_fin').value + '-' + this.form.get('mes_fin').value;
 
+        // se crea un arreglo con los usuarios seleccionados
         const usuarios = [];
         this.dataSourceSelected.data.forEach(item => {
           usuarios.push(item.usuario);
         });
 
+        // se hace la llamada a al servicio
         this.consultorService.selectPizzaData(usuarios, inicio, fin).subscribe(resp => {
+          // se comprueba si se recibio una respuesta
           if (resp) {
+            // se muestra la seccion de pizza
             this.informeHidden = true;
             this.graficoHidden = true;
             this.pizzaHidden = false;
 
+            // se obtienen los datos de pizza
             const labels = [];
             const data = [];
             const colors = [];
-
             resp.forEach(item => {
               labels.push(item.nombre);
               data.push(item.porciento);
@@ -333,6 +381,7 @@ export class ComercialComponent implements OnInit {
               colors.push(color);
             });
 
+            // se crea pizza
             this.pizza = new Chart('pizza', {
               type: 'pie',
               data: {
@@ -354,12 +403,19 @@ export class ComercialComponent implements OnInit {
                 },
               }
             });
+          } else {
+            // se muestra mensaje de error
+            this.snackBar.open('Ha ocurrido un error', null, {duration: 1500});
           }
         });
+      } else {
+        // se muestra mensaje al usuario
+        this.snackBar.open('No hay usuarios en la tabla Seleccion', null, {duration: 1500});
       }
     }
   }
 
+  // obtiene color aleatorio
   randomColor() {
     return '#' + ((1 << 24) * Math.random() | 0).toString(16);
   }

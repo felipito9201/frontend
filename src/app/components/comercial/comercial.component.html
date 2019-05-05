@@ -5,6 +5,7 @@
 
   <mat-card-content fxLayout="column">
     <div fxLayout="row" fxLayout.lt-md="column">
+      <!--Tabla Listado-->
       <div fxLayout="column" fxFlex="40">
         <h5 fxLayoutAlign="center">Listado</h5>
 
@@ -42,6 +43,7 @@
         <mat-paginator #MatPaginatorList [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
       </div>
 
+      <!--Botones de Agregar y Quitar-->
       <div fxLayout="column" fxFlex="20" fxLayoutAlign="center center">
         <button mat-raised-button (click)="add()" color="primary">
           Agregar a Selecci&oacute;n
@@ -53,6 +55,7 @@
 
       </div>
 
+      <!--Tabla Seleccion-->
       <div fxLayout="column" fxFlex="40">
         <h5 fxLayoutAlign="center">Selecci&oacute;n</h5>
 
@@ -95,6 +98,7 @@
 
     <form [formGroup]="form" fxLayout="column">
 
+      <!--Campos de entrada de rango de fecha-->
       <div fxLayout="row" fxLayout.xs="column" fxLayoutAlign="space-between">
         <mat-form-field fxFlex="24">
           <mat-select placeholder="Mes Inicio" formControlName="mes_inicio" [errorStateMatcher]="mesErrorStateMatcher"
@@ -157,6 +161,7 @@
         </mat-form-field>
       </div>
 
+      <!--Botones de funciones-->
       <div fxLayout="row" fxLayout.xs="column" fxLayoutAlign="center" fxLayoutGap="10px">
         <button mat-raised-button (click)="showInforme()" color="default">Informe</button>
 
@@ -168,13 +173,14 @@
 
     <br>
 
+    <!--Seccion de informe-->
     <div *ngIf="!informeHidden">
       <div *ngFor="let informe of informes">
         <br>
         <div fxLayout="column" class="mat-elevation-z8">
           <h6 fxLayoutAlign="center">{{informe.nombre}}</h6>
 
-          <span *ngIf="!informe.dataSource.data.length > 0" style="margin: 10px">No se encontraron datos.</span>
+          <span *ngIf="!(informe.dataSource.data.length > 0)" style="margin: 10px">No se encontraron datos.</span>
 
           <table mat-table [dataSource]="informe.dataSource" *ngIf="informe.dataSource.data.length > 0">
             <ng-container matColumnDef="fecha">
@@ -217,10 +223,12 @@
       </div>
     </div>
 
+    <!--Grafico-->
     <div [hidden]="graficoHidden">
       <canvas id="grafico">{{ grafico }}</canvas>
     </div>
 
+    <!--Pizza-->
     <div [hidden]="pizzaHidden">
       <canvas id="pizza">{{ pizza }}</canvas>
     </div>
