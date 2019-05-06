@@ -205,6 +205,8 @@ export class ComercialComponent implements OnInit {
             this.graficoHidden = true;
             this.pizzaHidden = true;
 
+            this.informes = [];
+
             // se crean los datasources de los informes
             resp.forEach(item => {
               this.informes.push({nombre: item.nombre, dataSource: new MatTableDataSource<Informe>(item.informes)});
