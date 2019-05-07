@@ -163,15 +163,19 @@
 
       <!--Botones de funciones-->
       <div fxLayout="row" fxLayout.xs="column" fxLayoutAlign="center" fxLayoutGap="10px">
-        <button mat-raised-button (click)="showInforme()" color="default">Informe</button>
+        <button mat-raised-button (click)="showInforme()" color="default" [disabled]="loading">Informe</button>
 
-        <button mat-raised-button (click)="showGrafico()" color="default">Gr&aacute;fico</button>
+        <button mat-raised-button (click)="showGrafico()" color="default" [disabled]="loading">Gr&aacute;fico</button>
 
-        <button mat-raised-button (click)="showPizza()" color="default">Pizza</button>
+        <button mat-raised-button (click)="showPizza()" color="default" [disabled]="loading">Pizza</button>
       </div>
     </form>
 
     <br>
+
+    <div fxLayout="row" fxLayoutAlign="center center">
+      <mat-spinner *ngIf="loading"></mat-spinner>
+    </div>
 
     <!--Seccion de informe-->
     <div *ngIf="!informeHidden">

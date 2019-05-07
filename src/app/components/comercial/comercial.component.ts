@@ -63,6 +63,7 @@ export class ComercialComponent implements OnInit {
   informeHidden = true;
   graficoHidden = true;
   pizzaHidden = true;
+  loading = false;
 
   // charts
   grafico: any;
@@ -188,6 +189,7 @@ export class ComercialComponent implements OnInit {
 
         this.informes = [];
 
+        this.loading = true;
         this.graficoHidden = true;
         this.pizzaHidden = true;
 
@@ -203,6 +205,8 @@ export class ComercialComponent implements OnInit {
 
         // se hace la llamada a al servicio
         this.consultorService.selectInforme(usuarios, inicio, fin).subscribe(resp => {
+          this.loading = false;
+
           // se comprueba si se recibio una respuesta
           if (resp) {
             // se muestra la seccion de informe
@@ -254,6 +258,7 @@ export class ComercialComponent implements OnInit {
       // se comprueba si hay elementos en la tabla Seleccion
       if (this.dataSourceSelected && this.dataSourceSelected.data.length > 0) {
 
+        this.loading = true;
         this.informeHidden = true;
         this.pizzaHidden = true;
 
@@ -269,6 +274,8 @@ export class ComercialComponent implements OnInit {
 
         // se hace la llamda a al servicio
         this.consultorService.selectGraficoData(usuarios, inicio, fin).subscribe(resp => {
+          this.loading = false;
+
           // se comprueba si se recibio una respuesta
           if (resp) {
             // se muestra la seccion de grafico
@@ -353,6 +360,7 @@ export class ComercialComponent implements OnInit {
       // se comprueba si hay elementos en la tabla Seleccion
       if (this.dataSourceSelected && this.dataSourceSelected.data.length > 0) {
 
+        this.loading = true;
         this.informeHidden = true;
         this.graficoHidden = true;
 
@@ -368,6 +376,8 @@ export class ComercialComponent implements OnInit {
 
         // se hace la llamada a al servicio
         this.consultorService.selectPizzaData(usuarios, inicio, fin).subscribe(resp => {
+          this.loading = false;
+
           // se comprueba si se recibio una respuesta
           if (resp) {
             // se muestra la seccion de pizza
