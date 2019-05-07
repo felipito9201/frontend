@@ -6,7 +6,7 @@
   <mat-card-content fxLayout="column">
     <div fxLayout="row" fxLayout.lt-md="column">
       <!--Tabla Listado-->
-      <div fxLayout="column" fxFlex="40">
+      <div fxLayout="column" fxFlex="40" style="overflow: auto">
         <h5 fxLayoutAlign="center">Listado</h5>
 
         <mat-form-field>
@@ -56,7 +56,7 @@
       </div>
 
       <!--Tabla Seleccion-->
-      <div fxLayout="column" fxFlex="40">
+      <div fxLayout="column" fxFlex="40" style="overflow: auto">
         <h5 fxLayoutAlign="center">Selecci&oacute;n</h5>
 
         <mat-form-field>
@@ -177,7 +177,7 @@
     <div *ngIf="!informeHidden">
       <div *ngFor="let informe of informes">
         <br>
-        <div fxLayout="column" class="mat-elevation-z8">
+        <div fxLayout="column" class="mat-elevation-z8" style="overflow: auto">
           <h6 fxLayoutAlign="center">{{informe.nombre}}</h6>
 
           <span *ngIf="!(informe.dataSource.data.length > 0)" style="margin: 10px">No se encontraron datos.</span>
@@ -224,12 +224,12 @@
     </div>
 
     <!--Grafico-->
-    <div [hidden]="graficoHidden">
+    <div [hidden]="graficoHidden" style="position: relative;margin: auto;height: 80vh;width: 80vw;">
       <canvas id="grafico">{{ grafico }}</canvas>
     </div>
 
     <!--Pizza-->
-    <div [hidden]="pizzaHidden">
+    <div [hidden]="pizzaHidden" style="position: margin: auto;height: 80vh; width: 80vw;">
       <canvas id="pizza">{{ pizza }}</canvas>
     </div>
 

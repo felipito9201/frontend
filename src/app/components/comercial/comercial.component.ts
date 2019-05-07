@@ -186,6 +186,11 @@ export class ComercialComponent implements OnInit {
       // se comprueba si hay elementos en la tabla Seleccion
       if (this.dataSourceSelected && this.dataSourceSelected.data.length > 0) {
 
+        this.informes = [];
+
+        this.graficoHidden = true;
+        this.pizzaHidden = true;
+
         // se obtienen las fechas
         const inicio = this.form.get('anno_inicio').value + '-' + this.form.get('mes_inicio').value;
         const fin = this.form.get('anno_fin').value + '-' + this.form.get('mes_fin').value;
@@ -202,10 +207,6 @@ export class ComercialComponent implements OnInit {
           if (resp) {
             // se muestra la seccion de informe
             this.informeHidden = false;
-            this.graficoHidden = true;
-            this.pizzaHidden = true;
-
-            this.informes = [];
 
             // se crean los datasources de los informes
             resp.forEach(item => {
@@ -253,6 +254,9 @@ export class ComercialComponent implements OnInit {
       // se comprueba si hay elementos en la tabla Seleccion
       if (this.dataSourceSelected && this.dataSourceSelected.data.length > 0) {
 
+        this.informeHidden = true;
+        this.pizzaHidden = true;
+
         // se obtienen las fechas
         const inicio = this.form.get('anno_inicio').value + '-' + this.form.get('mes_inicio').value;
         const fin = this.form.get('anno_fin').value + '-' + this.form.get('mes_fin').value;
@@ -268,9 +272,7 @@ export class ComercialComponent implements OnInit {
           // se comprueba si se recibio una respuesta
           if (resp) {
             // se muestra la seccion de grafico
-            this.informeHidden = true;
             this.graficoHidden = false;
-            this.pizzaHidden = true;
 
             // se obtienen los datos del grafico
             const labels = [];
@@ -305,6 +307,8 @@ export class ComercialComponent implements OnInit {
                 ]
               },
               options: {
+                responsive: true,
+                maintainAspectRatio: false,
                 tooltips: {
                   enabled: true
                 },
@@ -349,6 +353,9 @@ export class ComercialComponent implements OnInit {
       // se comprueba si hay elementos en la tabla Seleccion
       if (this.dataSourceSelected && this.dataSourceSelected.data.length > 0) {
 
+        this.informeHidden = true;
+        this.graficoHidden = true;
+
         // se obtienen las fechas
         const inicio = this.form.get('anno_inicio').value + '-' + this.form.get('mes_inicio').value;
         const fin = this.form.get('anno_fin').value + '-' + this.form.get('mes_fin').value;
@@ -364,8 +371,6 @@ export class ComercialComponent implements OnInit {
           // se comprueba si se recibio una respuesta
           if (resp) {
             // se muestra la seccion de pizza
-            this.informeHidden = true;
-            this.graficoHidden = true;
             this.pizzaHidden = false;
 
             // se obtienen los datos de pizza
@@ -395,6 +400,7 @@ export class ComercialComponent implements OnInit {
                 labels: labels
               },
               options: {
+                maintainAspectRatio: false,
                 responsive: true,
                 legend: {
                   display: true,
