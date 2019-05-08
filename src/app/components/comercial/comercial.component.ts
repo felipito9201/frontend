@@ -398,6 +398,12 @@ export class ComercialComponent implements OnInit {
               colors.push(color);
             });
 
+            if (data.reduce((acc, value) => acc + value, 0) === 0) {
+              this.snackBar.open('No se encontraron datos', null, {duration: 1500});
+              this.pizzaHidden = true;
+              return;
+            }
+
             // se crea pizza
             this.pizza = new Chart('pizza', {
               type: 'pie',
